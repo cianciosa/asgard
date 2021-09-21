@@ -25,7 +25,8 @@ jobs:
             - name: Show Cmake Log
               if: failure()
               working-directory: ${{runner.workspace}}/asgard/build/CMakeFiles
-              run: cat CMakeError.log
+              run: ls /usr/local/opt/
+                   cat CMakeError.log
             - name: Build
               working-directory: ${{runner.workspace}}/asgard/build
               run: make VERBOSE=1
