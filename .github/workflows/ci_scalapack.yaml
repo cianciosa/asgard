@@ -25,7 +25,7 @@ jobs:
             - name: Show Cmake Log
               if: failure()
               working-directory: ${{runner.workspace}}/asgard/build/CMakeFiles
-              run: ls -la /usr/local/Cellar/gcc/
+              run: ls -la /usr/local/Cellar/gcc/11.2.0
                    cat CMakeError.log
             - name: Build
               working-directory: ${{runner.workspace}}/asgard/build
