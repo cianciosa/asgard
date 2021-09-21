@@ -292,6 +292,7 @@ if (ASGARD_IO_HIGHFIVE)
 endif ()
 
 if (ASGARD_USE_SCALAPACK)
+  enable_language(Fortran)
   find_package(scalapack REQUIRED)
   # Uncomment and remove following line after issue #23 is fixed
   # https://bitbucket.org/icl/slate/issues/23
