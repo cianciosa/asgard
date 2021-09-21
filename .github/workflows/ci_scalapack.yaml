@@ -21,12 +21,11 @@ jobs:
               run: cmake -E make_directory build
             - name: Configure
               working-directory: ${{runner.workspace}}/asgard/build
-              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.node}} -DASGARD_USE_OPENMP=OFF -DASGARD_USE_MPI=ON -DASGARD_USE_SCALAPACK=ON -DCMAKE_Fortran_COMPILER=/usr/local/opt/gfortran-11 ../
+              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.node}} -DASGARD_USE_OPENMP=OFF -DASGARD_USE_MPI=ON -DASGARD_USE_SCALAPACK=ON -DCMAKE_Fortran_COMPILER=/usr/local/opt/gfortran/bin/gfortran ../
             - name: Show Cmake Log
               if: failure()
               working-directory: ${{runner.workspace}}/asgard/build/CMakeFiles
-              run: ls -la /usr/local/Cellar/gcc/11.2.0/bin
-                   cat CMakeError.log
+              run: cat CMakeError.log
             - name: Build
               working-directory: ${{runner.workspace}}/asgard/build
               run: make VERBOSE=1
