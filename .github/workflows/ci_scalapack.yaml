@@ -13,7 +13,7 @@ jobs:
         steps:
             - name: Install Libraries
               working-directory: ${{runner.workspace}}
-              run: brew install scalapack
+              run: brew install scalapack gfortran
             - name: Git checkout
               uses: actions/checkout@v1
             - name: Makedir
