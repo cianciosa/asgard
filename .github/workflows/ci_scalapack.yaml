@@ -25,7 +25,7 @@ jobs:
             - name: Show Cmake Log
               if: failure()
               working-directory: ${{runner.workspace}}/asgard/build/CMakeFiles
-              run: ls -la /usr/local/opt
+              run: ls -la /usr/local/opt/gfortran
                    cat CMakeError.log
             - name: Build
               working-directory: ${{runner.workspace}}/asgard/build
