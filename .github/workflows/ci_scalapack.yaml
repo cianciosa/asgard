@@ -11,39 +11,9 @@ jobs:
                 node: [Release, Debug]
         runs-on: ${{matrix.os}}
         steps:
-            - name: download_mpi
+            - name: Install Libraries
               working-directory: ${{runner.workspace}}
-              run: curl -O https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.1.tar.gz
-            - name: untar
-              working-directory: ${{runner.workspace}}
-              run: tar xzf openmpi-4.1.1.tar.gz
-            - name: configure_mpi
-              working-directory: ${{runner.workspace}}/openmpi-4.1.1
-              run: ./configure --enable-mpi-cxx
-            - name: make_mpi
-              working-directory: ${{runner.workspace}}/openmpi-4.1.1
-              run: make
-            - name: install_mpi
-              working-directory: ${{runner.workspace}}/openmpi-4.1.1
-              run: make install
-            - name: download_scalapack
-              working-directory: ${{runner.workspace}}
-              run: curl -O http://www.netlib.org/scalapack/scalapack-2.1.0.tgz
-            - name: untar
-              working-directory: ${{runner.workspace}}
-              run: tar xzf scalapack-2.1.0.tgz
-            - name: Makedir_build
-              working-directory: ${{runner.workspace}}/scalapack-2.1.0
-              run: cmake -E make_directory build
-            - name: Configure_scalapack
-              working-directory: ${{runner.workspace}}/scalapack-2.1.0/build
-              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.node}} -DASGARD_USE_MPI=ON -DASGARD_USE_SCALAPACK=ON ../
-            - name: make_scalapack
-              working-directory: ${{runner.workspace}}/scalapack-2.1.0/build
-              run: make VERBOSE=1
-            - name: install_scalapack
-              working-directory: ${{runner.workspace}}/scalapack-2.1.0/build
-              run: make install
+              run: brew install scalapack
             - name: Git checkout
               uses: actions/checkout@v1
             - name: Makedir
@@ -51,7 +21,7 @@ jobs:
               run: cmake -E make_directory build
             - name: Configure
               working-directory: ${{runner.workspace}}/asgard/build
-              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.node}} -DASGARD_USE_OPENMP=OFF ../
+              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.node}} -DASGARD_USE_OPENMP=OFF -DASGARD_USE_MPI=ON -DASGARD_USE_SCALAPACK=ON ../
             - name: Build
               working-directory: ${{runner.workspace}}/asgard/build
               run: make VERBOSE=1
