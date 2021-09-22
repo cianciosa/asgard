@@ -433,6 +433,11 @@ if (ASGARD_BUILD_TESTS)
       target_link_libraries (${component}-tests PRIVATE ${component} MPI::MPI_CXX)
       if (${component} IN_LIST mpi_test_components)
         set(test_ranks "4")
+#  Avoid over subscribe errors on git hub actions by limiting the number of MPI
+#  processes to the maximum number detected.
+        if (${test_ranks} GREATER ${MPIEXEC_MAX_NUMPROCS})
+            set(test_ranks ${MPIEXEC_MAX_NUMPROCS})
+        endif ()
       	if (ASGARD_USE_CUDA)
           set(test_ranks "1")
         endif ()
@@ -440,7 +445,7 @@ if (ASGARD_BUILD_TESTS)
          set(test_ranks ${ASGARD_TESTING_RANKS})
         endif ()
         add_test (NAME ${component}-test-mpi
-                  COMMAND mpirun -n ${test_ranks} ./${component}-tests
+                  COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXE_NUMPROC_FLAG} ${test_ranks} ./${component}-tests
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )
 	set_tests_properties (${component}-test-mpi PROPERTIES PROCESSORS ${test_ranks})
       endif()
