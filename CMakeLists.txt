@@ -438,10 +438,19 @@ if (ASGARD_BUILD_TESTS)
         if (${ASGARD_TESTING_RANKS})
          set(test_ranks ${ASGARD_TESTING_RANKS})
         endif ()
-        add_test (NAME ${component}-test-mpi
-                  COMMAND mpirun -n ${test_ranks} ./${component}-tests
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )
-	set_tests_properties (${component}-test-mpi PROPERTIES PROCESSORS ${test_ranks})
+
+#  Avoid over subscribe errors by limiting the number of MPI processes
+#  to the maximum number detected by FindMPI
+        if (${test_ranks} GREATER ${MPIEXEC_MAX_NUMPROCS})
+            set(test_ranks ${MPIEXEC_MAX_NUMPROCS})
+        endif ()
+
+        foreach (rank RANGE 1 ${test_ranks})
+          add_test (NAME ${component}-test-mpi_${rank}
+                    COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${rank} ./${component}-tests
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )
+          set_tests_properties (${component}-test-mpi_${rank} PROPERTIES PROCESSORS ${rank})
+        endforeach ()
       endif()
     endif ()
 
