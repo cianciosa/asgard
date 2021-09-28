@@ -455,7 +455,12 @@ if (ASGARD_BUILD_TESTS)
           add_test (NAME ${component}-test-mpi_${rank}
                     COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${rank} ./${component}-tests
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )
-          set_tests_properties (${component}-test-mpi_${rank} PROPERTIES PROCESSORS ${rank} ENVIRONMENT OMP_NUM_THREADS=1)
+
+#  A 10 minute timeout should be enough time to allow a normal run. If
+#  the test runs longer than this, there is probably a bug or deadlock.
+          set_tests_properties (${component}-test-mpi_${rank} PROPERTIES PROCESSORS ${rank}
+                                                                         ENVIRONMENT OMP_NUM_THREADS=1
+                                                                         TIMEOUT 600)
         endforeach ()
       endif()
     endif ()
