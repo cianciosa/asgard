@@ -30,7 +30,7 @@ int main( int argc, char* argv[] )
   distrib_test_info.set_num_ranks(1);
 #endif
 
-  int result = Catch::Session().run( argc, argv );
+  int result = Catch::Session().run(argc, argv);
 
 #ifdef ASGARD_USE_MPI
   finalize_distribution();
