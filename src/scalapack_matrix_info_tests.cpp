@@ -7,15 +7,15 @@
 
 int main(int argc, char* argv[])
 {
- #ifdef ASGARD_USE_MPI
+#ifdef ASGARD_USE_MPI
   initialize_distribution();
- #endif
+#endif
 
   int result = Catch::Session().run(argc, argv);
 
- #ifdef ASGARD_USE_MPI
+#ifdef ASGARD_USE_MPI
   finalize_distribution();
- #endif
+#endif
 
   return result;
 }
