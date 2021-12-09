@@ -5,7 +5,7 @@
 
 #include <array>
 
-int main( int argc, char* argv[] )
+int main(int argc, char* argv[])
 {
 #ifdef ASGARD_USE_MPI
   initialize_distribution();
