@@ -8,14 +8,14 @@
 #endif
 
 struct distribution_test_init {
-void set_my_rank(const int rank) { my_rank = rank; }
-void set_num_ranks(const int size) { num_ranks = size; }
-int get_my_rank() const { return my_rank; }
-int get_num_ranks() const { return num_ranks; }
+  void set_my_rank(const int rank) { my_rank = rank; }
+  void set_num_ranks(const int size) { num_ranks = size; }
+  int get_my_rank() const { return my_rank; }
+  int get_num_ranks() const { return num_ranks; }
 
 private:
-int my_rank;
-int num_ranks;
+  int my_rank;
+  int num_ranks;
 };
 static distribution_test_init distrib_test_info;
 
