@@ -20,18 +20,12 @@ struct distribution_handler
   MPI_Comm get_global_comm() const { return global_comm; }
 
 
-  void set_active(bool const status)
-  {
-    active = status;
-  }
-  bool is_active()
-  {
-    return active;
-  }
+  void set_active(bool const status) { active = status; }
+  bool is_active() { return active; }
 
 private:
   MPI_Comm global_comm = MPI_COMM_WORLD;
-  bool active = true;
+  bool active          = true;
 };
 static distribution_handler distro_handle;
 #endif
