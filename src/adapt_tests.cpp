@@ -19,7 +19,7 @@ private:
 };
 static distribution_test_init distrib_test_info;
 
-int main( int argc, char* argv[] )
+int main(int argc, char* argv[])
 {
 #ifdef ASGARD_USE_MPI
   auto const [rank, total_ranks] = initialize_distribution();

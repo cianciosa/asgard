@@ -2,7 +2,7 @@
 #include "distribution.hpp"
 #include "tests_general.hpp"
 
-int main( int argc, char* argv[] )
+int main(int argc, char* argv[])
 {
 #ifdef ASGARD_USE_MPI
   initialize_distribution();
