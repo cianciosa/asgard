@@ -35,6 +35,13 @@ register_project (kronmult
                   4738501
 )
 
+#  Catch two testing framework.
+register_project (Catch2
+                  CATCH2
+                  https://github.com/catchorg/Catch2.git
+                  v3.0.0-preview3
+)
+
 ###############################################################################
 ## Set up the compiler and general global build options
 ###############################################################################
@@ -292,6 +299,7 @@ if (ASGARD_IO_HIGHFIVE)
 endif ()
 
 if (ASGARD_USE_SCALAPACK)
+  enable_language (Fortran)
   find_package(scalapack REQUIRED)
   # Uncomment and remove following line after issue #23 is fixed
   # https://bitbucket.org/icl/slate/issues/23
@@ -401,9 +409,12 @@ if (ASGARD_BUILD_TESTS)
 
   # Define ctest tests and their executables
   add_library (tests_general testing/tests_general.cpp)
-  target_link_libraries (tests_general PUBLIC Catch PRIVATE pde program_options )
+  add_library (tests_general_main testing/tests_general.cpp)
+  target_link_libraries (tests_general PRIVATE pde program_options PUBLIC Catch2::Catch2)
+  target_link_libraries (tests_general_main PRIVATE pde program_options PUBLIC Catch2::Catch2WithMain)
   target_include_directories(tests_general PRIVATE ${CMAKE_BINARY_DIR})
-  
+  target_include_directories(tests_general_main PRIVATE ${CMAKE_BINARY_DIR})
+
   # components with MPI-enabled testing
   set (mpi_test_components
     adapt
@@ -419,7 +430,6 @@ if (ASGARD_BUILD_TESTS)
     add_executable (${component}-tests src/${component}_tests.cpp)
     target_include_directories (${component}-tests PRIVATE ${CMAKE_SOURCE_DIR}/testing)
     target_include_directories (${component}-tests PRIVATE ${CMAKE_BINARY_DIR})
-    target_link_libraries (${component}-tests PRIVATE ${component} tests_general)
     if (ASGARD_USE_SCALAPACK)
       target_compile_definitions (${component}-tests PUBLIC ASGARD_USE_SCALAPACK)
     endif ()
@@ -429,7 +439,7 @@ if (ASGARD_BUILD_TESTS)
     endif ()
 
     if (ASGARD_USE_MPI)
-      target_link_libraries (${component}-tests PRIVATE ${component} MPI::MPI_CXX)
+      target_link_libraries (${component}-tests PRIVATE ${component} MPI::MPI_CXX tests_general)
       if (${component} IN_LIST mpi_test_components)
         set(test_ranks "4")
       	if (ASGARD_USE_CUDA)
@@ -455,6 +465,8 @@ if (ASGARD_BUILD_TESTS)
           set_tests_properties (${component}-test-mpi_${rank} PROPERTIES PROCESSORS ${rank}
                                                                          TIMEOUT 600)
         endforeach ()
+      else ()
+        target_link_libraries (${component}-tests PRIVATE ${component} tests_general_main)
       endif()
     endif ()
 
@@ -466,7 +478,7 @@ if (ASGARD_BUILD_TESTS)
   add_executable (kronmult_cuda-tests src/device/kronmult_cuda_tests.cpp)
   target_include_directories (kronmult_cuda-tests PRIVATE ${CMAKE_SOURCE_DIR}/testing)
   target_include_directories (kronmult_cuda-tests PRIVATE ${CMAKE_BINARY_DIR})
-  target_link_libraries (kronmult_cuda-tests PRIVATE coefficients kronmult_cuda tests_general)
+  target_link_libraries (kronmult_cuda-tests PRIVATE coefficients kronmult_cuda tests_general_main)
   add_test (NAME kronmult_cuda-test
             COMMAND kronmult_cuda-tests
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} )

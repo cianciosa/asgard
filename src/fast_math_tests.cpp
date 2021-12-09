@@ -7,6 +7,21 @@
 #include <cmath>
 #include <numeric>
 
+int main( int argc, char* argv[] )
+{
+#ifdef ASGARD_USE_MPI
+  initialize_distribution();
+#endif
+
+  int result = Catch::Session().run( argc, argv );
+
+#ifdef ASGARD_USE_MPI
+  finalize_distribution();
+#endif
+
+  return result;
+}
+
 TEMPLATE_TEST_CASE("floating point norms", "[fast_math]", float, double)
 {
   /* vector 2-norm tests */
@@ -746,16 +761,6 @@ TEMPLATE_TEST_CASE("other vector routines", "[fast_math]", float, double, int)
     }
   }
 }
-
-struct distribution_test_init
-{
-  distribution_test_init() { initialize_distribution(); }
-  ~distribution_test_init() { finalize_distribution(); }
-};
-
-#ifdef ASGARD_USE_MPI
-static distribution_test_init const distrib_test_info;
-#endif
 
 TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
 {

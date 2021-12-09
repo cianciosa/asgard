@@ -5,15 +5,20 @@
 
 #include <array>
 
-struct distribution_test_init
+int main( int argc, char* argv[] )
 {
-  distribution_test_init() { initialize_distribution(); }
-  ~distribution_test_init() { finalize_distribution(); }
-};
+ #ifdef ASGARD_USE_MPI
+  initialize_distribution();
+ #endif
 
-#ifdef ASGARD_USE_MPI
-static distribution_test_init const distrib_test_info;
-#endif
+  int result = Catch::Session().run( argc, argv );
+
+ #ifdef ASGARD_USE_MPI
+  finalize_distribution();
+ #endif
+
+  return result;
+}
 
 TEST_CASE("Generating scalapack matrix info serial", "[scalapack_matrix_info]")
 {

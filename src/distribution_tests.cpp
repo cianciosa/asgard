@@ -5,35 +5,37 @@
 #include "cblacs_grid.hpp"
 #include "scalapack_vector_info.hpp"
 
-struct distribution_test_init
-{
-  distribution_test_init()
-  {
-#ifdef ASGARD_USE_MPI
-    auto const [rank, total_ranks] = initialize_distribution();
-    my_rank                        = rank;
-    num_ranks                      = total_ranks;
-#else
-    my_rank   = 0;
-    num_ranks = 1;
-#endif
-  }
-  ~distribution_test_init()
-  {
-#ifdef ASGARD_USE_MPI
-    finalize_distribution();
-#endif
-  }
-
-  int get_my_rank() const { return my_rank; }
-  int get_num_ranks() const { return num_ranks; }
+struct distribution_test_init {
+void set_my_rank(const int rank) { my_rank = rank; }
+void set_num_ranks(const int size) { num_ranks = size; }
+int get_my_rank() const { return my_rank; }
+int get_num_ranks() const { return num_ranks; }
 
 private:
-  int my_rank;
-  int num_ranks;
+int my_rank;
+int num_ranks;
 };
+static distribution_test_init distrib_test_info;
 
-static distribution_test_init const distrib_test_info;
+int main( int argc, char* argv[] )
+{
+#ifdef ASGARD_USE_MPI
+  auto const [rank, total_ranks] = initialize_distribution();
+  distrib_test_info.set_my_rank(rank);
+  distrib_test_info.set_num_ranks(total_ranks);
+#else
+  distrib_test_info.set_my_rank(0);
+  distrib_test_info.set_num_ranks(1);
+#endif
+
+  int result = Catch::Session().run( argc, argv );
+
+#ifdef ASGARD_USE_MPI
+  finalize_distribution();
+#endif
+
+  return result;
+}
 
 TEST_CASE("subgrid struct", "[distribution]")
 {
@@ -743,6 +745,7 @@ TEMPLATE_TEST_CASE("gather results tests", "[distribution]", float, double)
         REQUIRE(fx == fk::vector<TestType>(results));
       }
     }
+    MPI_Barrier(MPI_COMM_WORLD);
 #else
     REQUIRE(true);
 #endif

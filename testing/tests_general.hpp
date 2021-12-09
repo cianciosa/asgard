@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include "catch.hpp"
-#include "src/fast_math.hpp"
-#include "src/pde.hpp"
-#include "src/program_options.hpp"
+#include "../src/fast_math.hpp"
+#include "../src/pde.hpp"
+#include "../src/program_options.hpp"
 #include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
+#include <catch2/catch_all.hpp>
 
 /* These functions implement: norm( v0 - v1 ) < tolerance * max( norm(v0),
  * norm(v1) )*/
@@ -62,7 +62,7 @@ void compare_vectors(std::vector<P> const &a, std::vector<P> const &b)
   if constexpr (std::is_floating_point<P>::value)
   {
     for (size_t i = 0; i < a.size(); i++)
-      if (a[i] != Approx(b[i]).epsilon(std::numeric_limits<P>::epsilon() * 2))
+      if (a[i] != Catch::Approx(b[i]).epsilon(std::numeric_limits<P>::epsilon() * 2))
         FAIL("" << a[i] << " != " << b[i]);
   }
   else

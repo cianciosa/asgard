@@ -19,8 +19,17 @@ struct distribution_handler
   }
   MPI_Comm get_global_comm() const { return global_comm; }
 
+
+  void set_active(bool const status) {
+    active = status;
+  }
+  bool is_active() {
+    return active;
+  }
+
 private:
   MPI_Comm global_comm = MPI_COMM_WORLD;
+  bool active = true;
 };
 static distribution_handler distro_handle;
 #endif
@@ -132,6 +141,10 @@ std::array<int, 2> initialize_distribution()
   {
     distro_handle.set_global_comm(effective_communicator);
     initialize_libraries(get_local_rank());
+  }
+  else
+  {
+    distro_handle.set_active(false);
   }
 
   return {my_rank, num_participating};
@@ -1112,7 +1125,10 @@ fk::vector<P> row_to_col_major(fk::vector<P> const &x, int size_r)
 void bcast(int *value, int size, int rank)
 {
 #ifdef ASGARD_USE_MPI
-  MPI_Bcast(value, size, MPI_INT, rank, distro_handle.get_global_comm());
+  if (distro_handle.is_active())
+  {
+    MPI_Bcast(value, size, MPI_INT, rank, distro_handle.get_global_comm());
+  }
 #else
   (void)value;
   (void)size;
