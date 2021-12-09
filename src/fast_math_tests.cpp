@@ -13,7 +13,7 @@ int main( int argc, char* argv[] )
   initialize_distribution();
 #endif
 
-  int result = Catch::Session().run( argc, argv );
+  int result = Catch::Session().run(argc, argv);
 
 #ifdef ASGARD_USE_MPI
   finalize_distribution();
