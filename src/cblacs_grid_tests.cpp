@@ -2,15 +2,20 @@
 #include "distribution.hpp"
 #include "tests_general.hpp"
 
-struct distribution_test_init
+int main( int argc, char* argv[] )
 {
-  distribution_test_init() { initialize_distribution(); }
-  ~distribution_test_init() { finalize_distribution(); }
-};
+#ifdef ASGARD_USE_MPI
+  initialize_distribution();
+#endif
+
+  int result = Catch::Session().run( argc, argv );
 
 #ifdef ASGARD_USE_MPI
-static distribution_test_init const distrib_test_info;
+  finalize_distribution();
 #endif
+
+  return result;
+}
 
 TEST_CASE("Generating a cblacs grid.", "[cblacs_grid]")
 {
