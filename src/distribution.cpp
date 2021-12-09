@@ -19,7 +19,6 @@ struct distribution_handler
   }
   MPI_Comm get_global_comm() const { return global_comm; }
 
-
   void set_active(bool const status) { active = status; }
   bool is_active() { return active; }
 
