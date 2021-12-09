@@ -9,7 +9,7 @@
 // ==========================================================================
 //  NOTE: The openblas cblas interfers with the OpenMPI library put these in the
 //        implimentation instead of the header to avoid this conflict.
-#ifdef ASGARD_ACCELERATE
+#if defined(ASGARD_ACCELERATE) || defined(__APPLE__) && defined(ASGARD_USE_SCALAPACK)
 #include <Accelerate/Accelerate.h>
 #else
 #include <cblas.h>
