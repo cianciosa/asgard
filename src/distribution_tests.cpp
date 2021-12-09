@@ -5,7 +5,8 @@
 #include "cblacs_grid.hpp"
 #include "scalapack_vector_info.hpp"
 
-struct distribution_test_init {
+struct distribution_test_init
+{
   void set_my_rank(const int rank) { my_rank = rank; }
   void set_num_ranks(const int size) { num_ranks = size; }
   int get_my_rank() const { return my_rank; }
@@ -17,7 +18,7 @@ private:
 };
 static distribution_test_init distrib_test_info;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 #ifdef ASGARD_USE_MPI
   auto const [rank, total_ranks] = initialize_distribution();
