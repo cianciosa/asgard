@@ -13,6 +13,8 @@ find_package (Git)
 
 #  Define a macro to register new projects.
 function (register_project name dir url default_tag)
+    message (STATUS "Registering project ${name}")
+
     set (BUILD_TAG_${dir} ${default_tag} CACHE STRING "Name of the tag to checkout.")
     set (BUILD_REPO_${dir} ${url} CACHE STRING "URL of the repo to clone.")
 
