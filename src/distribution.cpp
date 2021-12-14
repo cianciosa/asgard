@@ -7,6 +7,16 @@
 #include <list>
 #include <numeric>
 
+#ifdef ASGARD_USE_SCALAPACK
+extern "C"
+{
+  void pdgeadd_(char *, int *, int *, double *, double *, int *, int *, int *,
+                double *, double *, int *, int *, int *);
+  void psgeadd_(char *, int *, int *, float *, float *, int *, int *, int *,
+                float *, float *, int *, int *, int *);
+}
+#endif
+
 #ifdef ASGARD_USE_MPI
 struct distribution_handler
 {
@@ -1131,6 +1141,69 @@ void bcast(int *value, int size, int rank)
 #endif
 }
 
+#ifdef ASGARD_USE_SCALAPACK
+template<typename P>
+void gather_matrix(P *A, int *descA, P *A_distr, int *descA_distr)
+{
+  // Useful constants
+  P zero{0.0}, one{1.0};
+  int i_one{1};
+  char N{'N'};
+  int n = descA[fk::N_];
+  int m = descA[fk::M_];
+  // Call pdgeadd_ to distribute matrix (i.e. copy A into A_distr)
+  if constexpr (std::is_same<P, double>::value)
+  {
+    pdgeadd_(&N, &m, &n, &one, A_distr, &i_one, &i_one, descA_distr, &zero, A,
+             &i_one, &i_one, descA);
+  }
+  else if constexpr (std::is_same<P, float>::value)
+  {
+    psgeadd_(&N, &m, &n, &one, A_distr, &i_one, &i_one, descA_distr, &zero, A,
+             &i_one, &i_one, descA);
+  }
+  else
+  { // not instantiated; should never be reached
+    std::cerr << "geadd not implemented for non-floating types" << '\n';
+    expect(false);
+  }
+}
+
+template<typename P>
+void scatter_matrix(P *A, int *descA, P *A_distr, int *descA_distr)
+{
+  // Useful constants
+  P zero{0.0}, one{1.0};
+  int i_one{1};
+  char N{'N'};
+  // Call pdgeadd_ to distribute matrix (i.e. copy A into A_distr)
+  int n = descA[fk::N_];
+  int m = descA[fk::M_];
+
+  int desc[9];
+  if (get_rank() == 0)
+  {
+    std::copy_n(descA, 9, desc);
+  }
+  bcast(desc, 9, 0);
+  if constexpr (std::is_same<P, double>::value)
+  {
+    pdgeadd_(&N, &m, &n, &one, A, &i_one, &i_one, desc, &zero, A_distr, &i_one,
+             &i_one, descA_distr);
+  }
+  else if constexpr (std::is_same<P, float>::value)
+  {
+    psgeadd_(&N, &m, &n, &one, A, &i_one, &i_one, desc, &zero, A_distr, &i_one,
+             &i_one, descA_distr);
+  }
+  else
+  { // not instantiated; should never be reached
+    std::cerr << "geadd not implemented for non-floating types" << '\n';
+    expect(false);
+  }
+}
+#endif
+
 template void reduce_results(fk::vector<float> const &source,
                              fk::vector<float> &dest,
                              distribution_plan const &plan, int const my_rank);
@@ -1188,3 +1261,13 @@ template fk::vector<float>
 col_to_row_major(fk::vector<float> const &x, int size_r);
 template fk::vector<double>
 col_to_row_major(fk::vector<double> const &x, int size_r);
+#ifdef ASGARD_USE_SCALAPACK
+template void
+gather_matrix<float>(float *A, int *descA, float *A_distr, int *descA_distr);
+template void
+gather_matrix<double>(double *A, int *descA, double *A_distr, int *descA_distr);
+template void
+scatter_matrix<float>(float *A, int *descA, float *A_distr, int *descA_distr);
+template void scatter_matrix<double>(double *A, int *descA, double *A_distr,
+                                     int *descA_distr);
+#endif
