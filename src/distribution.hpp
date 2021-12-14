@@ -350,7 +350,7 @@ template<typename P, mem_type amem, mem_type bmem>
 void scatter(fk::vector<P, amem> &A, fk::scalapack_vector_info &ainfo,
              fk::vector<P, bmem> &A_distr, fk::scalapack_vector_info &descAinfo)
 {
-   scatter_matrix(A.data(), ainfo.get_desc(), A_distr.data(),
-                  descAinfo.get_desc());
+  scatter_matrix(A.data(), ainfo.get_desc(), A_distr.data(),
+                 descAinfo.get_desc());
 }
 #endif
