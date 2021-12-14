@@ -476,7 +476,9 @@ if (ASGARD_BUILD_TESTS)
         endforeach ()
       else ()
         target_link_libraries (${component}-tests PRIVATE ${component} PUBLIC tests_general_main)
-      endif()
+      endif ()
+    else ()
+      target_link_libraries (${component}-tests PRIVATE ${component} PUBLIC tests_general_main)
     endif ()
 
     add_test (NAME ${component}-test
