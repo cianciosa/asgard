@@ -828,8 +828,8 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
     fk::matrix<TestType> A_distr(A_distr_info.local_rows(),
                                  A_distr_info.local_cols());
 
-    lib_dispatch::scatter_matrix(A_copy.data(), A_info.get_desc(),
-                                 A_distr.data(), A_distr_info.get_desc());
+    scatter_matrix(A_copy.data(), A_info.get_desc(), A_distr.data(),
+                   A_distr_info.get_desc());
 
     fk::vector<TestType> x = B_gold;
     fk::scalapack_vector_info x_info(x.size());
@@ -837,8 +837,8 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
     fk::scalapack_vector_info x_distr_info(x.size(), 4, grid);
     fk::vector<TestType> x_distr(x_distr_info.local_size());
 
-    lib_dispatch::scatter_matrix(x.data(), x_info.get_desc(), x_distr.data(),
-                                 x_distr_info.get_desc());
+    scatter_matrix(x.data(), x_info.get_desc(), x_distr.data(),
+                   x_distr_info.get_desc());
 
     std::vector<int> ipiv(A_distr_info.local_rows() + A_distr_info.mb());
 
@@ -853,8 +853,8 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
       rmse_comparison(x_distr, X_gold, tol_factor);
     }
 
-    lib_dispatch::scatter_matrix(B1_gold.data(), x_info.get_desc(),
-                                 x_distr.data(), x_distr_info.get_desc());
+    scatter_matrix(B1_gold.data(), x_info.get_desc(), x_distr.data(),
+                   x_distr_info.get_desc());
 
     fm::getrs(A_distr, A_distr_info, x_distr, x_distr_info, ipiv);
     if (rank == 0)
@@ -898,7 +898,7 @@ TEMPLATE_TEST_CASE("", "[parallel_solver]", float, double)
     REQUIRE(A_distr_info.local_rows() * A_distr_info.local_cols() == 4);
   }
 
-  fm::scatter(A, A_info, A_distr, A_distr_info);
+  scatter(A, A_info, A_distr, A_distr_info);
 
   if (num_ranks == 1)
   {
@@ -935,7 +935,7 @@ TEMPLATE_TEST_CASE("", "[parallel_solver]", float, double)
     REQUIRE(B_distr_info.local_size() == 2);
   }
 
-  fm::scatter(B, B_info, B_distr, B_distr_info);
+  scatter(B, B_info, B_distr, B_distr_info);
 
   if (num_ranks == 1)
   {
