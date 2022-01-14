@@ -44,6 +44,13 @@ register_project (Catch2
                   v3.0.0-preview3
 )
 
+#  Catch two testing framework.
+register_project (Catch2
+                  CATCH2
+                  https://github.com/catchorg/Catch2.git
+                  v3.0.0-preview3
+)
+
 ###############################################################################
 ## Set up the compiler and general global build options
 ###############################################################################
@@ -450,6 +457,7 @@ if (ASGARD_BUILD_TESTS)
         if (${ASGARD_TESTING_RANKS})
          set(test_ranks ${ASGARD_TESTING_RANKS})
         endif ()
+
 #  Avoid over subscribe errors by limiting the number of MPI processes
 #  to the maximum number detected by FindMPI
         if (${test_ranks} GREATER ${MPIEXEC_MAX_NUMPROCS})
