@@ -42,6 +42,11 @@ int main(int argc, char *argv[])
 
 TEST_CASE("subgrid struct", "[distribution]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int const row_start = 0;
   int const row_stop  = 4;
   int const col_start = 1;
@@ -149,6 +154,11 @@ void check_rowmaj_layout(distribution_plan const &to_test, int const num_cols)
 
 TEST_CASE("rank subgrid function", "[distribution]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("1 rank, whole problem")
   {
     int const degree = 4;
@@ -283,6 +293,11 @@ TEST_CASE("rank subgrid function", "[distribution]")
 
 TEST_CASE("distribution plan function", "[distribution]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("1 rank")
   {
     int const degree = 3;
@@ -352,6 +367,11 @@ TEST_CASE("distribution plan function", "[distribution]")
 TEMPLATE_TEST_CASE("allreduce across row of subgrids", "[distribution]", float,
                    double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("1 rank")
   {
     auto const num_ranks = 1;
@@ -536,6 +556,11 @@ void generate_messages_test(int const num_ranks, elements::table const &table)
 
 TEST_CASE("generate messages tests", "[distribution]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("one rank, small problem")
   {
     int const degree = 2;
@@ -623,6 +648,11 @@ TEST_CASE("generate messages tests", "[distribution]")
 
 TEMPLATE_TEST_CASE("prepare inputs tests", "[distribution]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   // in this case, the source vector is simply copied into dest
   SECTION("single rank")
   {
@@ -638,7 +668,6 @@ TEMPLATE_TEST_CASE("prepare inputs tests", "[distribution]", float, double)
   SECTION("multiple rank")
   {
 #ifdef ASGARD_USE_MPI
-
     int const my_rank   = distrib_test_info.get_my_rank();
     int const num_ranks = distrib_test_info.get_num_ranks();
     if (my_rank < num_ranks)
@@ -690,6 +719,11 @@ TEMPLATE_TEST_CASE("prepare inputs tests", "[distribution]", float, double)
 
 TEMPLATE_TEST_CASE("gather results tests", "[distribution]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("single rank")
   {
     fk::vector<TestType> const source{1, 2, 3, 4, 5};
@@ -748,7 +782,6 @@ TEMPLATE_TEST_CASE("gather results tests", "[distribution]", float, double)
         REQUIRE(fx == fk::vector<TestType>(results));
       }
     }
-    MPI_Barrier(MPI_COMM_WORLD);
 #else
     REQUIRE(true);
 #endif
@@ -757,6 +790,11 @@ TEMPLATE_TEST_CASE("gather results tests", "[distribution]", float, double)
 
 TEMPLATE_TEST_CASE("gather errors tests", "[distribution]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int const my_rank   = distrib_test_info.get_my_rank();
   int const num_ranks = distrib_test_info.get_num_ranks();
 
@@ -779,6 +817,11 @@ TEMPLATE_TEST_CASE("gather errors tests", "[distribution]", float, double)
 
 TEST_CASE("distribute table tests", "[distribution]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("single rank - should copy back")
   {
     std::vector<int64_t> const source{1, 2, 3, 4, 5};
@@ -791,7 +834,6 @@ TEST_CASE("distribute table tests", "[distribution]")
   SECTION("multiple rank - should aggregate all")
   {
 #ifdef ASGARD_USE_MPI
-
     auto const my_rank   = distrib_test_info.get_my_rank();
     auto const num_ranks = distrib_test_info.get_num_ranks();
 
@@ -1010,6 +1052,11 @@ void redistribute_vector_test(distribution_plan const &old_plan,
 TEMPLATE_TEST_CASE("messages and redistribution for adaptivity",
                    "[distribution]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   SECTION("single rank coarsen - messages to self to redistribute vector")
   {
     distribution_plan const plan     = {{0, element_subgrid(0, 1, 0, 8)}};
@@ -1212,6 +1259,11 @@ TEMPLATE_TEST_CASE("messages and redistribution for adaptivity",
 
 TEMPLATE_TEST_CASE("row_to_col_major", "[scalapack]", double, float)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int m     = 4;
   auto grid = get_grid();
 
@@ -1278,6 +1330,11 @@ TEMPLATE_TEST_CASE("row_to_col_major", "[scalapack]", double, float)
 
 TEST_CASE("bcast", "[distribution]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::array<int, 9> desc;
   if (get_rank() == 0)
     desc = {0, 1, 2, 3, 4, 5, 6, 7, 8};
