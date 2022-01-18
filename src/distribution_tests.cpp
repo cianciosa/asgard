@@ -782,7 +782,6 @@ TEMPLATE_TEST_CASE("gather results tests", "[distribution]", float, double)
         REQUIRE(fx == fk::vector<TestType>(results));
       }
     }
-    MPI_Barrier(MPI_COMM_WORLD);
 #else
     REQUIRE(true);
 #endif
