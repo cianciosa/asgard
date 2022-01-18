@@ -820,6 +820,11 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
 #ifdef ASGARD_USE_SCALAPACK
   SECTION("scalapack_gesv and scalapack_getrs")
   {
+    if (!is_active())
+    {
+        return;
+    }
+
     auto grid                         = get_grid();
     fk::matrix<TestType> const A_copy = A_gold;
     fk::scalapack_matrix_info A_info(A_copy.nrows(), A_copy.ncols());
@@ -869,6 +874,11 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
 
 TEMPLATE_TEST_CASE("", "[parallel_solver]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int myrank    = get_rank();
   int num_ranks = get_num_ranks();
 
