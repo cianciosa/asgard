@@ -114,6 +114,11 @@ void test_adapt(parser const &problem, std::string const &gold_base)
 TEMPLATE_TEST_CASE("adapt - 1d, scattered coarsen/refine", "[adapt]", double,
                    float)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   auto const degree = 3;
   auto const level  = 4;
 
@@ -139,6 +144,10 @@ TEMPLATE_TEST_CASE("adapt - 1d, scattered coarsen/refine", "[adapt]", double,
 
 TEMPLATE_TEST_CASE("adapt - 2d, all zero", "[adapt]", double, float)
 {
+  if (!is_active())
+  {
+    return;
+  }
   auto const degree = 2;
   auto const level  = 5;
 
@@ -165,6 +174,10 @@ TEMPLATE_TEST_CASE("adapt - 2d, all zero", "[adapt]", double, float)
 TEMPLATE_TEST_CASE("adapt - 3d, scattered, contiguous refine/adapt", "[adapt]",
                    double, float)
 {
+  if (!is_active())
+  {
+    return;
+  }
   auto const degree = 4;
   auto const level  = 4;
 
@@ -254,6 +267,10 @@ TEMPLATE_TEST_CASE("initial - diffusion 1d", "[adapt]", double, float)
 
 TEMPLATE_TEST_CASE("initial - diffusion 2d", "[adapt]", double, float)
 {
+  if (!is_active())
+  {
+    return;
+  }
   auto const degree = 3;
   auto const level  = 2;
 
