@@ -90,6 +90,14 @@ int get_num_ranks()
   return 1;
 }
 
+bool is_active()
+{
+#ifdef ASGARD_USE_MPI
+  return distro_handle.is_active();
+#endif
+  return true;
+}
+
 // to simplify distribution, we have designed the code
 // to run with even and/or perfect square number of ranks.
 

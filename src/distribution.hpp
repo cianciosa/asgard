@@ -163,6 +163,8 @@ int get_local_rank();
 int get_rank();
 // get number of ranks overall
 int get_num_ranks();
+// is rank active.
+bool is_active();
 
 // this struct will use node-local ranks to ensure only
 // one rank prints some input val:
