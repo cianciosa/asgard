@@ -19,6 +19,11 @@ int main(int argc, char *argv[])
 
 TEST_CASE("Generating a cblacs grid.", "[cblacs_grid]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int myrank    = get_rank();
   int num_ranks = get_num_ranks();
   int nprow     = std::sqrt(num_ranks);
