@@ -22,6 +22,11 @@ int main(int argc, char *argv[])
 
 TEST_CASE("Generating scalapack vector info serial", "[scalapack_vector_info]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int size{4};
   fk::scalapack_vector_info info(size);
   REQUIRE(info.local_size() == size);
@@ -48,6 +53,11 @@ TEST_CASE("Generating scalapack vector info serial", "[scalapack_vector_info]")
 TEST_CASE("Generating scalapack vector info parallel",
           "[scalapack_vector_info]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   auto grid = get_grid();
   int size{4};
   int mb{2};

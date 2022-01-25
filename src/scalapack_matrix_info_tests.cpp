@@ -22,6 +22,11 @@ int main(int argc, char *argv[])
 
 TEST_CASE("Generating scalapack matrix info serial", "[scalapack_matrix_info]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   int rows{4}, cols{8};
   fk::scalapack_matrix_info info(rows, cols);
   REQUIRE(info.local_rows() == rows);
@@ -52,6 +57,11 @@ TEST_CASE("Generating scalapack matrix info serial", "[scalapack_matrix_info]")
 TEST_CASE("Generating scalapack matrix info parallel",
           "[scalapack_matrix_info]")
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   auto grid = get_grid();
   int rows{4}, cols{4};
   int mb{2}, nb{2};

@@ -822,7 +822,7 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
   {
     if (!is_active())
     {
-        return;
+      return;
     }
 
     auto grid                         = get_grid();
