@@ -68,7 +68,7 @@ void time_advance_test(parser const &parse, std::string const &filepath,
   // -- time loop
   for (auto i = 0; i < opts.num_time_steps; ++i)
   {
-    //std::cout.setstate(std::ios_base::failbit);
+    std::cout.setstate(std::ios_base::failbit);
     auto const workspace_limit_MB = 4000;
     auto const time               = i * pde->get_dt();
     auto const update_system      = i == 0;
@@ -258,8 +258,6 @@ TEST_CASE("adaptive time advance")
 
   SECTION("fokkerplanck1_pitch_E case1 explicit")
   {
-    std::cout << get_rank() << " fokkerplanck1_pitch_E case1 explicit" << std::endl;
-
     auto const tol_factor        = 1e-15;
     std::string const pde_choice = "fokkerplanck_1d_pitch_E_case1";
     auto const degree            = 4;
@@ -285,8 +283,6 @@ TEST_CASE("adaptive time advance")
 
   SECTION("fokkerplanck1_pitch_E case2 explicit")
   {
-    std::cout << get_rank() << " fokkerplanck1_pitch_E case2 explicit" << std::endl;
-
     auto const tol_factor        = 1e-15;
     std::string const pde_choice = "fokkerplanck_1d_pitch_E_case2";
     auto const degree            = 4;
