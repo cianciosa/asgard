@@ -68,7 +68,7 @@ void time_advance_test(parser const &parse, std::string const &filepath,
   // -- time loop
   for (auto i = 0; i < opts.num_time_steps; ++i)
   {
-    std::cout.setstate(std::ios_base::failbit);
+    //std::cout.setstate(std::ios_base::failbit);
     auto const workspace_limit_MB = 4000;
     auto const time               = i * pde->get_dt();
     auto const update_system      = i == 0;
@@ -105,6 +105,13 @@ static std::string get_level_string(fk::vector<int> const &levels)
 TEMPLATE_TEST_CASE("time advance - diffusion 2", "[time_advance]", double,
                    float)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
+  std::cout << get_rank() << " time advance - diffusion 2" << std::endl;
+
   TestType const cfl           = 0.01;
   std::string const pde_choice = "diffusion_2";
   int const num_dims           = 2;
@@ -184,9 +191,18 @@ TEMPLATE_TEST_CASE("time advance - diffusion 2", "[time_advance]", double,
 
 TEST_CASE("adaptive time advance")
 {
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
+  {
+    return;
+  }
+
+  std::cout << get_rank() << " adaptive time advance" << std::endl;
+
   auto const cfl = 0.01;
   SECTION("diffusion 2 implicit")
   {
+    std::cout << get_rank() << " diffusion 2 implicit" << std::endl;
+
     auto const tol_factor        = 1e-11;
     std::string const pde_choice = "diffusion_2";
     auto const degree            = 4;
@@ -206,17 +222,22 @@ TEST_CASE("adaptive time advance")
     time_advance_test(parse, gold_base, tol_factor);
 
 #ifdef ASGARD_USE_SCALAPACK
+    std::cout << get_rank() << " diffusion 2 implicit scalapack" << std::endl;
+
     auto const solver_str = std::string_view("scalapack");
 
     parser const parse_scalapack(
         pde_choice, levels, degree, cfl, full_grid, parser::DEFAULT_MAX_LEVEL,
         num_steps, use_implicit, do_adapt_levels, adapt_threshold, solver_str);
+    std::cout << get_rank() << " diffusion 2 implicit scalapack2" << std::endl;
 
     time_advance_test(parse_scalapack, gold_base, tol_factor);
 #endif
   }
   SECTION("diffusion 2 explicit")
   {
+    std::cout << get_rank() << " diffusion 2 explicit" << std::endl;
+
     auto const tol_factor        = 1e-11;
     std::string const pde_choice = "diffusion_2";
     auto const degree            = 4;
@@ -237,6 +258,8 @@ TEST_CASE("adaptive time advance")
 
   SECTION("fokkerplanck1_pitch_E case1 explicit")
   {
+    std::cout << get_rank() << " fokkerplanck1_pitch_E case1 explicit" << std::endl;
+
     auto const tol_factor        = 1e-15;
     std::string const pde_choice = "fokkerplanck_1d_pitch_E_case1";
     auto const degree            = 4;
@@ -262,6 +285,8 @@ TEST_CASE("adaptive time advance")
 
   SECTION("fokkerplanck1_pitch_E case2 explicit")
   {
+    std::cout << get_rank() << " fokkerplanck1_pitch_E case2 explicit" << std::endl;
+
     auto const tol_factor        = 1e-15;
     std::string const pde_choice = "fokkerplanck_1d_pitch_E_case2";
     auto const degree            = 4;
@@ -287,6 +312,8 @@ TEST_CASE("adaptive time advance")
 
   SECTION("continuity 2 explicit")
   {
+    std::cout << get_rank() << " continuity 2 explicit" << std::endl;
+
     auto const tol_factor        = 1e-13;
     std::string const pde_choice = "continuity_2";
     auto const degree            = 4;
@@ -309,6 +336,13 @@ TEST_CASE("adaptive time advance")
 TEMPLATE_TEST_CASE("time advance - diffusion 1", "[time_advance]", double,
                    float)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
+  std::cout << get_rank() << " time advance - diffusion 1" << std::endl;
+
   TestType const cfl     = 0.01;
   std::string pde_choice = "diffusion_1";
   int const num_dims     = 1;
@@ -351,6 +385,11 @@ TEMPLATE_TEST_CASE("time advance - diffusion 1", "[time_advance]", double,
 TEMPLATE_TEST_CASE("time advance - continuity 1", "[time_advance]", float,
                    double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "continuity_1";
 
   TestType const cfl = 0.01;
@@ -409,6 +448,11 @@ TEMPLATE_TEST_CASE("time advance - continuity 1", "[time_advance]", float,
 TEMPLATE_TEST_CASE("time advance - continuity 2", "[time_advance]", float,
                    double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "continuity_2";
   TestType const cfl           = 0.01;
   TestType const tol_factor =
@@ -479,6 +523,11 @@ TEMPLATE_TEST_CASE("time advance - continuity 2", "[time_advance]", float,
 TEMPLATE_TEST_CASE("time advance - continuity 3", "[time_advance]", float,
                    double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "continuity_3";
   TestType const cfl           = 0.01;
   TestType const tol_factor =
@@ -537,6 +586,11 @@ TEMPLATE_TEST_CASE("time advance - continuity 3", "[time_advance]", float,
 TEMPLATE_TEST_CASE("time advance - continuity 6", "[time_advance]", float,
                    double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "continuity_6";
   TestType const cfl           = 0.01;
   TestType const tol_factor =
@@ -577,6 +631,11 @@ TEMPLATE_TEST_CASE("time advance - continuity 6", "[time_advance]", float,
 TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_pitch_C", "[time_advance]",
                    float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "fokkerplanck_1d_pitch_C";
   TestType const cfl           = 0.01;
   TestType const tol_factor =
@@ -602,6 +661,11 @@ TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_pitch_C", "[time_advance]",
 TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_4p3", "[time_advance]",
                    float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "fokkerplanck_1d_4p3";
   TestType const cfl           = 0.01;
   auto const num_dims          = 1;
@@ -629,6 +693,11 @@ TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_4p3", "[time_advance]",
 TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_pitch_E_case1",
                    "[time_advance]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "fokkerplanck_1d_pitch_E_case1";
   TestType const cfl           = 0.01;
   TestType const tol_factor =
@@ -654,6 +723,11 @@ TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_pitch_E_case1",
 TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_pitch_E_case2",
                    "[time_advance]", float, double)
 {
+  if (!is_active())
+  {
+    return;
+  }
+
   std::string const pde_choice = "fokkerplanck_1d_pitch_E_case2";
   TestType const cfl           = 0.01;
   TestType const tol_factor =
@@ -680,6 +754,11 @@ TEMPLATE_TEST_CASE("time advance - fokkerplanck_1d_pitch_E_case2",
 TEMPLATE_TEST_CASE("implicit time advance - fokkerplanck_2d_complete",
                    "[time_advance]", float, double)
 {
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
+  {
+    return;
+  }
+
   TestType const cfl     = 0.01;
   std::string pde_choice = "fokkerplanck_2d_complete";
   auto const num_dims    = 2;
@@ -801,6 +880,11 @@ TEMPLATE_TEST_CASE("implicit time advance - fokkerplanck_2d_complete",
 TEMPLATE_TEST_CASE("implicit time advance - diffusion 1", "[time_advance]",
                    double, float)
 {
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
+  {
+    return;
+  }
+
   TestType const cfl     = 0.01;
   std::string pde_choice = "diffusion_1";
   TestType const tol_factor =
@@ -841,6 +925,11 @@ TEMPLATE_TEST_CASE("implicit time advance - diffusion 1", "[time_advance]",
 TEMPLATE_TEST_CASE("implicit time advance - diffusion 2", "[time_advance]",
                    double, float)
 {
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
+  {
+    return;
+  }
+
   std::string pde_choice = "diffusion_2";
   TestType const cfl     = 0.01;
   TestType const tol_factor =
@@ -949,6 +1038,11 @@ TEMPLATE_TEST_CASE("implicit time advance - diffusion 2", "[time_advance]",
 TEMPLATE_TEST_CASE("implicit time advance - continuity 1", "[time_advance]",
                    double)
 {
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
+  {
+    return;
+  }
+
   std::string pde_choice = "continuity_1";
   TestType const cfl     = 0.01;
 
@@ -1036,6 +1130,11 @@ TEMPLATE_TEST_CASE("implicit time advance - continuity 1", "[time_advance]",
 TEMPLATE_TEST_CASE("implicit time advance - continuity 2", "[time_advance]",
                    float, double)
 {
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
+  {
+    return;
+  }
+
   std::string pde_choice = "continuity_2";
   TestType const cfl     = 0.01;
 

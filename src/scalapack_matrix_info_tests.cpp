@@ -57,7 +57,7 @@ TEST_CASE("Generating scalapack matrix info serial", "[scalapack_matrix_info]")
 TEST_CASE("Generating scalapack matrix info parallel",
           "[scalapack_matrix_info]")
 {
-  if (!is_active())
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
   {
     return;
   }
