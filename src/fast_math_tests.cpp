@@ -872,7 +872,7 @@ TEMPLATE_TEST_CASE("LU Routines", "[fast_math]", float, double)
 
 TEMPLATE_TEST_CASE("", "[parallel_solver]", float, double)
 {
-  if (!is_active())
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
   {
     return;
   }

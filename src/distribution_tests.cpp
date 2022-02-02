@@ -1259,7 +1259,7 @@ TEMPLATE_TEST_CASE("messages and redistribution for adaptivity",
 
 TEMPLATE_TEST_CASE("row_to_col_major", "[scalapack]", double, float)
 {
-  if (!is_active())
+  if (!is_active() || get_num_ranks() == 2 || get_num_ranks() == 3)
   {
     return;
   }
