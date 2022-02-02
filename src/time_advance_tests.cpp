@@ -858,8 +858,8 @@ TEMPLATE_TEST_CASE("implicit time advance - diffusion 1", "[time_advance]",
     return;
   }
 
-  TestType const cfl     = 0.01;
-  std::string pde_choice = "diffusion_1";
+  TestType const cfl        = 0.01;
+  std::string pde_choice    = "diffusion_1";
   auto constexpr tol_factor = get_tolerance<TestType>(100);
 
   auto const num_dims = 1;
@@ -902,8 +902,8 @@ TEMPLATE_TEST_CASE("implicit time advance - diffusion 2", "[time_advance]",
     return;
   }
 
-  std::string pde_choice = "diffusion_2";
-  TestType const cfl     = 0.01;
+  std::string pde_choice    = "diffusion_2";
+  TestType const cfl        = 0.01;
   auto constexpr tol_factor = get_tolerance<TestType>(100);
 
   auto const num_dims = 2;
@@ -1014,8 +1014,8 @@ TEMPLATE_TEST_CASE("implicit time advance - continuity 1", "[time_advance]",
     return;
   }
 
-  std::string pde_choice = "continuity_1";
-  TestType const cfl     = 0.01;
+  std::string pde_choice    = "continuity_1";
+  TestType const cfl        = 0.01;
   auto constexpr tol_factor = get_tolerance<TestType>(10);
 
   auto const num_dims = 1;
@@ -1104,8 +1104,8 @@ TEMPLATE_TEST_CASE("implicit time advance - continuity 2", "[time_advance]",
     return;
   }
 
-  std::string pde_choice = "continuity_2";
-  TestType const cfl     = 0.01;
+  std::string pde_choice    = "continuity_2";
+  TestType const cfl        = 0.01;
   auto constexpr tol_factor = get_tolerance<TestType>(10);
 
   auto const num_dims = 2;
