@@ -283,6 +283,7 @@ target_link_libraries (coefficients
 target_link_libraries(distribution PRIVATE elements lib_dispatch)
 if (ASGARD_USE_MPI)
   target_link_libraries(distribution PRIVATE MPI::MPI_CXX)
+  target_link_libraries(lib_dispatch PRIVATE MPI::MPI_CXX)
 endif ()
 
 target_link_libraries (elements
@@ -313,7 +314,7 @@ if (ASGARD_USE_SCALAPACK)
   # Uncomment and remove following line after issue #23 is fixed
   # https://bitbucket.org/icl/slate/issues/23
   # target_link_libraries (lib_dispatch PRIVATE slate_scalapack_api scalapack MPI::MPI_CXX)
-  target_link_libraries (lib_dispatch PRIVATE scalapack MPI::MPI_CXX)
+  target_link_libraries (lib_dispatch PRIVATE scalapack)
   target_compile_definitions (lib_dispatch PUBLIC ASGARD_USE_SCALAPACK)
 else ()
   target_link_libraries (lib_dispatch PRIVATE LINALG::LINALG)
